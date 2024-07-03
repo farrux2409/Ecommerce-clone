@@ -1,0 +1,60 @@
+{% extends 'blog/base/base.html' %}
+{% load static %}
+{% block delete_content %}
+
+<style>
+
+
+.delete-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Center the text */
+.text-center {
+  text-align: center;
+}
+
+/* Styling for confirmation text */
+.confirm-text {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Button styling */
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+</style>
+<title>Delete Customer Page</title>
+<br><br>
+    <h1 class="text-center">Customerni O`chirish</h1>
+    <form method="post" class="delete-form">
+      {% csrf_token %}
+      <p class="confirm-text"> Customerni  o'chiraymi.?</p>
+      <div class="form-group mb-3">
+
+        <input type="submit" class="btn btn-success" value="Delete">
+    </div>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+
+{% endblock  %}

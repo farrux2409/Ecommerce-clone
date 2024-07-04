@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login
@@ -18,6 +17,7 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from blog.views.tokens import account_activation_token
+
 
 def login_page(request):
     form = LoginForm()
@@ -66,35 +66,24 @@ def register(request):
             subject = 'Verify your account '
             message = render_to_string('blog/auth/email/activation.html',
                                        {
-                                           'request':request,
-                                           'user':user,
-                                           'domain':current_site.domain,
-                                           'uid':urlsafe_base64_encode(force_bytes(user.id)),
-                                           'token':account_activation_token.make_token(user)
-                                        })
+                                           'request': request,
+                                           'user': user,
+                                           'domain': current_site.domain,
+                                           'uid': urlsafe_base64_encode(force_bytes(user.id)),
+                                           'token': account_activation_token.make_token(user)
+                                       })
 
-                                         
-             
-            email = EmailMessage(subject,message,to=[email])
+            email = EmailMessage(subject, message, to=[email])
             email.content_subtype = 'html'
             email.send()
-            login(request, user,backend='django.contrib.auth.backends.ModelBackend')
+            # login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('verify_email_done')
 
             # login(request, user,backend='django.contrib.auth.backends.ModelBackend')
             # return redirect('login')
-                                                         
-    return render(request, 'blog/auth/register.html', {'form': form})                                     
 
+    return render(request, 'blog/auth/register.html', {'form': form})
 
-                                      
-           
-                                       
-                                       
-           
-            
-           
-    
 
 def sending_email(request):
     sent = False
@@ -107,14 +96,12 @@ def sending_email(request):
         to = request.POST.get('to')
         send_mail(subject, message, from_email, [to])
         sent = True
-   
 
     return render(request, 'blog/sending-email.html', {'form': form, 'sent': sent})
 
 
 def verify_email_done(request):
-    return render(request,'blog/auth/email/verify-email-done.html')
-
+    return render(request, 'blog/auth/email/verify-email-done.html')
 
 
 def verify_email_confirm(request, uidb64, token):
@@ -126,8 +113,8 @@ def verify_email_confirm(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-       
-        return redirect('verify_email_complete')   
+
+        return redirect('verify_email_complete')
     else:
         messages.warning(request, 'The link is invalid.')
     return render(request, 'blog/auth/email/verify-email-confirm.html')
@@ -135,4 +122,3 @@ def verify_email_confirm(request, uidb64, token):
 
 def verify_email_complete(request):
     return render(request, 'blog/auth/email/verify-email-complete.html')
-

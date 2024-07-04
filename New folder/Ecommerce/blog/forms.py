@@ -1,5 +1,6 @@
 from django import forms
-from .models import Customer, Product,User
+from .models import Customer, Product, User
+
 
 class CustomerModelForm(forms.ModelForm):
     class Meta:
@@ -35,7 +36,8 @@ class LoginForm(forms.Form):
         except User.DoesNotExist:
             raise forms.ValidationError(f'Bunday {email} mavjud emas')
         return password
-    
+
+
 class RegisterForm(forms.Form):
     first_name = forms.CharField(max_length=100, required=False)
     email = forms.EmailField()
@@ -56,9 +58,20 @@ class RegisterForm(forms.Form):
 
         return password
 
+
 class EmailForm(forms.Form):
     subject = forms.CharField(max_length=50)
     message = forms.CharField(widget=forms.Textarea)
     from_email = forms.EmailField()
     to = forms.EmailField()
-    
+
+
+# from django.contrib.auth.forms import UserCreationForm
+#
+#
+# class UserRegisterForm(UserCreationForm):
+#     email = forms.EmailField()
+#
+#     class Meta:
+#         model = Customer
+#         fields = ('first_name',  'email', 'password', 'confirm_password')

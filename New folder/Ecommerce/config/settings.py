@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,7 +40,6 @@ INSTALLED_APPS = [
     'import_export',
 
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -133,22 +131,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'blog.User'
 
-
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.google.GoogleOAuth2'
 ]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '' # Google Client ID
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '' # Google Client Secret
-
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''  # Google Client ID
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''  # Google Client Secret
 
 LOGIN_REDIRECT_URL = '/'
-
-
-   
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -156,7 +147,4 @@ EMAIL_HOST_USER = 'farruxyoldoshov2409@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL  = EMAIL_HOST_USER
-
-
-   
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

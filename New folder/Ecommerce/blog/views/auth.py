@@ -1,7 +1,9 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.contrib.auth.views import LoginView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout, authenticate, login
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView
 
 from blog.forms import LoginForm, RegisterForm, EmailForm
 from blog.models import User
@@ -122,3 +124,70 @@ def verify_email_confirm(request, uidb64, token):
 
 def verify_email_complete(request):
     return render(request, 'blog/auth/email/verify-email-complete.html')
+
+
+# Homework start here
+class CustomLoginView(LoginView):
+    template_name = 'blog/auth/login.html'
+    form_class = LoginForm
+    success_url = reverse_lazy('index')
+
+    def form_invalid(self, form):
+        if form.errors:
+            email = form.cleaned_data.get('email')
+            try:
+                user = User.objects.get(email=email)
+                if not user.check_password(form.cleaned_data['password']):
+                    messages.add_message(self.request, messages.ERROR, 'Password didn\'t match.')
+            except User.DoesNotExist:
+                messages.add_message(request=self.request, level=messages.ERROR, message='User not found')
+
+        return self.render_to_response(self.get_context_data(form=form))
+
+        # with password correct email incorrect
+        # if form.errors:
+        #     password = form.cleaned_data.get('password')
+        #     try:
+        #         user = User.objects.get(password=password)
+        #         if not user.check_password(form.cleaned_data['email']):
+        #             messages.add_message(self.request, messages.ERROR, 'Email didn\'t match.')
+        #     except User.DoesNotExist:
+        #         messages.add_message(request=self.request, level=messages.ERROR, message='User not found')
+
+    # def get_success_url(self):
+    #     return reverse_lazy('index')
+
+
+class RegisterFormView(FormView):
+    template_name = 'blog/auth/register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('index')
+
+    def form_valid(self, form):
+        first_name = form.cleaned_data.get('first_name')
+        email = form.cleaned_data.get('email')
+        password = form.cleaned_data.get('password')
+        user = User.objects.create_user(first_name=first_name, email=email, password=password)
+        user.is_active = False
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        current_site = get_current_site(self.request)
+        subject = 'Verify your account '
+        message = render_to_string('blog/auth/email/activation.html',
+                                   {
+                                       'request': self.request,
+                                       'user': user,
+                                       'domain': current_site.domain,
+                                       'uid': urlsafe_base64_encode(force_bytes(user.id)),
+                                       'token': account_activation_token.make_token(user)
+                                   })
+
+        email = EmailMessage(subject, message, to=[email])
+        email.content_subtype = 'html'
+        email.send()
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return redirect('verify_email_done')
+
+        # login(request, user,backend='django.contrib.auth.backends.ModelBackend')
+        # return redirect('login')

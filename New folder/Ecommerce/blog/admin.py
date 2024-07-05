@@ -33,6 +33,8 @@ class Product(ImportExportModelAdmin, admin.ModelAdmin):
     # prepopulated_fields = {'slug': ('name',)}
 
 
+
 @admin.register(Customer)
 class CustomerModelAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ("name", "email", "phone")
+    date_hierarchy = 'joined_date'

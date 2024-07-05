@@ -485,3 +485,5 @@ class CustomerRegisterView(View):
             # return redirect('login')
 
         return render(request, 'blog/auth/register.html', {'form': form})
+
+

@@ -1,7 +1,9 @@
 from django import forms
+
+from .authentication_form import AuthenticationForm
 from .models import Customer, Product, User
 
-
+from blog.authentication_form import AuthenticationForm
 class CustomerModelForm(forms.ModelForm):
     class Meta:
         model = Customer
@@ -16,26 +18,26 @@ class ProductListModelForm(forms.ModelForm):
 
 # Login and register
 
-class LoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(max_length=255)
-
-    def clean_email(self):
-        email = self.data.get('email')
-        if not User.objects.filter(email=email).exists():
-            raise forms.ValidationError('Bunday email topilmadi')
-        return email
-
-    def clean_password(self):
-        email = self.cleaned_data.get('email')
-        password = self.data.get('password')
-        try:
-            user = User.objects.get(email=email)
-            if not user.check_password(password):
-                raise forms.ValidationError('Parol xato')
-        except User.DoesNotExist:
-            raise forms.ValidationError(f'Bunday {email} mavjud emas')
-        return password
+# class LoginForm(forms.Form):
+#     email = forms.EmailField()
+#     password = forms.CharField(max_length=255)
+#
+#     def clean_email(self):
+#         email = self.data.get('email')
+#         if not User.objects.filter(email=email).exists():
+#             raise forms.ValidationError('Bunday email topilmadi')
+#         return email
+#
+#     def clean_password(self):
+#         email = self.cleaned_data.get('email')
+#         password = self.data.get('password')
+#         try:
+#             user = User.objects.get(email=email)
+#             if not user.check_password(password):
+#                 raise forms.ValidationError('Parol xato')
+#         except User.DoesNotExist:
+#             raise forms.ValidationError(f'Bunday {email} mavjud emas')
+#         return password
 
 
 class RegisterForm(forms.Form):
@@ -75,3 +77,8 @@ class EmailForm(forms.Form):
 #     class Meta:
 #         model = Customer
 #         fields = ('first_name',  'email', 'password', 'confirm_password')
+
+
+class LoginForm(AuthenticationForm):
+    email = forms.EmailField()
+    password = forms.CharField(max_length=255)

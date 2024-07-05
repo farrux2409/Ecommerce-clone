@@ -22,14 +22,16 @@ from blog.views.auth import (
     sending_email,
     verify_email_done,
     verify_email_complete,
-    verify_email_confirm
+    verify_email_confirm, RegisterFormView,CustomLoginView
 )
 from blog.views.class_based_views import (
-    CustomLoginView,
+    # CustomLoginView,
     CustomLogoutView,
     CustomerRegisterView,
 
 )
+
+
 
 urlpatterns = [
     # Product urls
@@ -47,7 +49,7 @@ urlpatterns = [
     # authentication's url
     path('login-page/', CustomLoginView.as_view(), name='login'),
     path('logout-page/', CustomLogoutView.as_view(), name='logout'),
-    path('register-page/', CustomerRegisterView.as_view(), name='register'),
+    path('register-page/', RegisterFormView.as_view(), name='register'),
     # sending email url
     path('sending-email-url/', sending_email, name='sending_email'),
     #  verify email url
